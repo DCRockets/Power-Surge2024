@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.opModes;
 
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @TeleOp(name = "FieldCentric")
@@ -17,9 +19,14 @@ public class FieldCentricTeleop extends LinearOpMode {
         DcMotor backRight = hardwareMap.dcMotor.get("backRight");
 
         // Reverse the right side motors
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        DcMotor armMotor = hardwareMap.dcMotor.get("armPivot");
+        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
+        PIDFController armPIDF = new PIDFController(1,2,3,4);
         // Initialize imu
         BNO055IMU imu = hardwareMap.get(BNO055IMU.class, "imu");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -34,12 +41,14 @@ public class FieldCentricTeleop extends LinearOpMode {
             double turn = gamepad1.right_stick_x;
 
             // Read inverse imu heading
-            double botHeading = -imu.getAngularOrientation().firstAngle;
+            double botHeading = imu.getAngularOrientation().firstAngle;
+            telemetry.addData("Angle",botHeading);
+            telemetry.update();
 
             // Rotate gamepad input x/y by hand
             // See: https://matthew-brett.github.io/teaching/rotation_2d.html
             double rotX = x * Math.cos(botHeading) - y * Math.sin(botHeading);
-            double rotY = x * Math.sin(botHeading) + y * Math.cos(botHeading);
+            double rotY = y * Math.sin(botHeading) - x * Math.cos(botHeading);
 
             double frontLeftPower = rotY + rotX + turn;
             double backLeftPower = rotY - rotX + turn;
@@ -64,10 +73,34 @@ public class FieldCentricTeleop extends LinearOpMode {
                 backRightPower /= max;
             }
 
+            if (gamepad1.dpad_up) {
+                armMotor.setPower(0.1);
+            } else if (gamepad1.dpad_down) {
+                armMotor.setPower((-0.1));
+
+            } else {
+                armMotor.setPower(0);
+            }
+            // update pid controller
+            armPIDF.setSetPoint(1200);
+
+            // perform the control loop
+            /*
+             * The loop checks to see if the controller has reached
+             * the desired setpoint within a specified tolerance
+             * range
+             */
+//            double output = armPIDF.calculate(
+//                    armMotor.getCurrentPosition()  // the measured value
+//            );
+//            armMotor.setPower(output);
+//            armMotor.setPower(0);
+
             frontLeft.setPower(frontLeftPower);
             backLeft.setPower(backLeftPower);
             frontRight.setPower(frontRightPower);
             backRight.setPower(backRightPower);
+
         }
     }
 }
