@@ -33,32 +33,28 @@ public class FieldCentricTeleop extends LinearOpMode {
 
         // Servos
         CRServo intake = hardwareMap.get(CRServo.class, "Intake");
-        CRServo wrist = hardwareMap.get(CRServo.class, "Wrist");
-
-/*
-        wrist.setPosition(1);
-*/
+        Servo wrist = hardwareMap.get(Servo.class, "Wrist");
 
         DcMotorEx armMotor = hardwareMap.get(DcMotorEx.class,"armPivot");
-        DcMotorEx slidesMotor = hardwareMap.get(DcMotorEx.class,"slidesMotor");
+//        DcMotorEx slidesMotor = hardwareMap.get(DcMotorEx.class,"slidesMotor");
 
         // setup movement motors
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slidesMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        slidesMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slidesMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        slidesMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        slidesMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        slidesMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        slidesMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        slidesMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         // init motors at current position
         armMotor.setTargetPosition(armMotor.getCurrentPosition());
-        slidesMotor.setTargetPosition((slidesMotor.getCurrentPosition()));
+//        slidesMotor.setTargetPosition((slidesMotor.getCurrentPosition()));
         //Init Speed and setpoints
         double pivotSpeed = 0;
-        double slidesSpeed = 0;
+//        double slidesSpeed = 0;
         int pivotSetpoint = armMotor.getCurrentPosition();
-        int slidesSetpoint = slidesMotor.getCurrentPosition();
+//        int slidesSetpoint = slidesMotor.getCurrentPosition();
 
         // testing PIDF
         PIDFController armPIDF = new PIDFController(1,2,3,4);
@@ -129,6 +125,8 @@ public class FieldCentricTeleop extends LinearOpMode {
                 backRightPower /= max;
             }
 
+            double pos = 0;
+
             frontLeft.setPower(frontLeftPower);
             backLeft.setPower(backLeftPower);
             frontRight.setPower(frontRightPower);
@@ -192,14 +190,14 @@ public class FieldCentricTeleop extends LinearOpMode {
 
 
             // ARM PIVOT MANUAL - NOT USED ----------------------
-            /*
-            if (gamepad1.a) {
+
+            if (gamepad1.start) {
                 pivotSetpoint += 30;
                 pivotSpeed = velocityDirection(pivotSetpoint, armMotor.getCurrentPosition(), -2);
-            } else if (gamepad1.b) {
+            } else if (gamepad1.back) {
                 pivotSetpoint -= 30;
                 pivotSpeed = velocityDirection(pivotSetpoint, armMotor.getCurrentPosition(), -2);
-            }*/
+            }
 
 
             // INTAKE BUTTONS -------------------------------
@@ -209,20 +207,34 @@ public class FieldCentricTeleop extends LinearOpMode {
             } else if (gamepad1.right_bumper) {
                 intake.setPower(-0.5);
             } else {
-                intake.setPower(0);
+                intake.setPower(-0.1);
             }
 
             // WRIST BUTTONS ------------------------------------------
-            if (gamepad1.dpad_up) {
-                wrist.setPower(.1);
-            } else if (gamepad1.dpad_down) {
-                wrist.setPower(-.1);
-            } else if (gamepad1.dpad_right) {
-                wrist.setPower(.3);
-            /*} else {
+//            if (gamepad1.dpad_right) {
+//                wrist.setPower(0.1);
+//            } else if (gamepad1.dpad_left) {
+//                wrist.setPower(-0.1);
+//            } else {
+//                wrist.setPower(0.05);
+//            }
 
-                wrist.setPower(0);*/
+            if (gamepad1.dpad_left) {
+                wrist.setPosition(0.3);
             }
+            if (gamepad1.dpad_right) {
+                wrist.setPosition(0.2);
+            }
+            if (gamepad1.dpad_down) {
+                wrist.setPosition(0);
+            }
+            if (gamepad1.dpad_up) {
+                wrist.setPosition(-0.05);
+            }
+
+
+
+
            /* if (gamepad1.dpad_up) {
                 wrist.setPosition(0.5);
             } else if (gamepad1.dpad_down) {
@@ -238,6 +250,7 @@ public class FieldCentricTeleop extends LinearOpMode {
             telemetry.addData("roty",rotY);
             telemetry.addData("x",x);
             telemetry.addData("math.cos",Math.cos(botHeading));
+            telemetry.addData("Wrist Pos", wrist.getPosition());
 /*
             telemetry.addData("wrist pos", wrist.getPosition());
 */
