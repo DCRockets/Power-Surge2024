@@ -12,11 +12,16 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.external.hardware.camera.*;
 
 @TeleOp(name = "FieldCentric")
 public class FieldCentricTeleop extends LinearOpMode {
     @Override public void runOpMode() {
+        ElapsedTime runtime = new ElapsedTime();
+
+
         ComputerVision vision = new ComputerVision();
         vision.init(hardwareMap, telemetry);
 
@@ -34,6 +39,9 @@ public class FieldCentricTeleop extends LinearOpMode {
         // Servos
         CRServo intake = hardwareMap.get(CRServo.class, "Intake");
         Servo wrist = hardwareMap.get(Servo.class, "Wrist");
+        Servo claw = hardwareMap.get(Servo.class, "Claw");
+
+        double wristPosition = 0;
 
         DcMotorEx armMotor = hardwareMap.get(DcMotorEx.class,"armPivot");
 //        DcMotorEx slidesMotor = hardwareMap.get(DcMotorEx.class,"slidesMotor");
@@ -167,20 +175,22 @@ public class FieldCentricTeleop extends LinearOpMode {
             //Button Bindings
             if (gamepad1.y) {
                 // pivot ground goal
-                pivotSetpoint = 5000;
-                pivotSpeed = velocityDirection(pivotSetpoint, armMotor.getCurrentPosition(), 2);
+                pivotSetpoint = 0;
+                pivotSpeed = velocityDirection(pivotSetpoint, armMotor.getCurrentPosition(), 0.75);
             } else if (gamepad1.x) {
                 // pivot low goal
-                pivotSetpoint = 1700;
-                pivotSpeed = velocityDirection(pivotSetpoint, armMotor.getCurrentPosition(), 2);
+                pivotSetpoint = -1800;
+                pivotSpeed = velocityDirection(pivotSetpoint, armMotor.getCurrentPosition(), 1.5);
             } else if (gamepad1.b) {
                 // pivot climb
-                pivotSetpoint = 4900;
-                pivotSpeed = velocityDirection(pivotSetpoint, armMotor.getCurrentPosition(), 2);
+
+//                pivotSetpoint = 4900;
+//                pivotSpeed = velocityDirection(pivotSetpoint, armMotor.getCurrentPosition(), 2);
+                claw.setPosition(0.4);
             } else if (gamepad1.a) {
                 // pivot ground
-                pivotSetpoint = 0;
-                pivotSpeed = velocityDirection(pivotSetpoint, armMotor.getCurrentPosition(), 2);
+//                pivotSetpoint = 0;
+//                pivotSpeed = velocityDirection(pivotSetpoint, armMotor.getCurrentPosition(), 2);
             }
 
             // Set position and velocity
@@ -226,11 +236,13 @@ public class FieldCentricTeleop extends LinearOpMode {
                 wrist.setPosition(0.2);
             }
             if (gamepad1.dpad_down) {
-                wrist.setPosition(0);
+                wristPosition-=0.05;
             }
             if (gamepad1.dpad_up) {
-                wrist.setPosition(-0.05);
+                wristPosition+=0.05;
             }
+
+            wrist.setPosition(wristPosition);
 
 
 
@@ -251,9 +263,6 @@ public class FieldCentricTeleop extends LinearOpMode {
             telemetry.addData("x",x);
             telemetry.addData("math.cos",Math.cos(botHeading));
             telemetry.addData("Wrist Pos", wrist.getPosition());
-/*
-            telemetry.addData("wrist pos", wrist.getPosition());
-*/
             telemetry.update();
 
         }
