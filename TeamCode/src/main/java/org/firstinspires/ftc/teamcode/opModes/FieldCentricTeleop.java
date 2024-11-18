@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode.opModes;
-import org.firstinspires.ftc.teamcode.subsystems.ComputerVision;
+//import org.firstinspires.ftc.teamcode.subsystems.ComputerVision;
 
 
 import com.arcrobotics.ftclib.controller.PIDFController;
@@ -15,15 +15,25 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.*;
+import org.firstinspires.ftc.teamcode.utility.MotionProfile;
 
 @TeleOp(name = "FieldCentric")
 public class FieldCentricTeleop extends LinearOpMode {
+    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
+    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double pivotJerk = 3000;
+
     @Override public void runOpMode() {
+
+
         ElapsedTime runtime = new ElapsedTime();
 
 
-        ComputerVision vision = new ComputerVision();
-        vision.init(hardwareMap, telemetry);
+//        ComputerVision vision = new ComputerVision();
+//        vision.init(hardwareMap, telemetry);
 
         // Declare our motors
         // Make sure your ID's match your configuration
@@ -41,7 +51,7 @@ public class FieldCentricTeleop extends LinearOpMode {
         Servo wrist = hardwareMap.get(Servo.class, "Wrist");
         Servo claw = hardwareMap.get(Servo.class, "Claw");
 
-        double wristPosition = 0;
+        double wristPosition = wrist.getPosition();
 
         DcMotorEx armMotor = hardwareMap.get(DcMotorEx.class,"armPivot");
 //        DcMotorEx slidesMotor = hardwareMap.get(DcMotorEx.class,"slidesMotor");
@@ -64,6 +74,9 @@ public class FieldCentricTeleop extends LinearOpMode {
         int pivotSetpoint = armMotor.getCurrentPosition();
 //        int slidesSetpoint = slidesMotor.getCurrentPosition();
 
+        MotionProfile target = new MotionProfile(10, 4 * COUNTS_PER_INCH,pivotSetpoint);
+
+
         // testing PIDF
         PIDFController armPIDF = new PIDFController(1,2,3,4);
         armPIDF.setP(0.9);
@@ -83,7 +96,7 @@ public class FieldCentricTeleop extends LinearOpMode {
         
 
 
-
+        runtime.reset();
         while(opModeIsActive()) {
             // get joystick values
             double x = gamepad1.left_stick_x;
@@ -91,15 +104,13 @@ public class FieldCentricTeleop extends LinearOpMode {
             double turn = gamepad1.right_stick_x; //negative left or negative right?
 
 
-
-
             // DRIVING ---------------------------------------------------------------------------
 
             // Read inverse imu heading
             double botHeading = imu.getAngularOrientation().firstAngle;
-            if (botHeading > (2 * Math.PI)){
+            if (botHeading > (2 * Math.PI)) {
                 botHeading -= (2 * Math.PI);
-            } else if (botHeading < 0){
+            } else if (botHeading < 0) {
                 botHeading += (2 * Math.PI);
             }
 
@@ -147,27 +158,26 @@ public class FieldCentricTeleop extends LinearOpMode {
 
             //Button Bindings
 //            if (gamepad1.dpad_up) {
-  //              // slides high goal
-    //            slidesSetpoint = 0;
-      //          slidesSpeed = velocityDirection(slidesSetpoint, slidesMotor.getCurrentPosition(), 2);
-        //    } else if (gamepad1.dpad_left) {
-          //      // slides low goal
+            //              // slides high goal
+            //            slidesSetpoint = 0;
+            //          slidesSpeed = velocityDirection(slidesSetpoint, slidesMotor.getCurrentPosition(), 2);
+            //    } else if (gamepad1.dpad_left) {
+            //      // slides low goal
             //    slidesSetpoint = 0;
-              //  slidesSpeed = velocityDirection(slidesSetpoint, slidesMotor.getCurrentPosition(), 2);
+            //  slidesSpeed = velocityDirection(slidesSetpoint, slidesMotor.getCurrentPosition(), 2);
 //            } else if (gamepad1.dpad_right) {
-  //              // slides climbing
-    //            slidesSetpoint = 0;
-      //          slidesSpeed = velocityDirection(slidesSetpoint, slidesMotor.getCurrentPosition(), 2);
-        //    } else if (gamepad1.dpad_down) {
-          //      // slides ground
+            //              // slides climbing
+            //            slidesSetpoint = 0;
+            //          slidesSpeed = velocityDirection(slidesSetpoint, slidesMotor.getCurrentPosition(), 2);
+            //    } else if (gamepad1.dpad_down) {
+            //      // slides ground
             //    slidesSetpoint = 0;
-              //  slidesSpeed = velocityDirection(slidesSetpoint, slidesMotor.getCurrentPosition(), 2);
-           // }
+            //  slidesSpeed = velocityDirection(slidesSetpoint, slidesMotor.getCurrentPosition(), 2);
+            // }
 
             // Set position and velocity
-           // slidesMotor.setTargetPosition(slidesSetpoint);
-           // slidesMotor.setVelocity(slidesSpeed);
-
+            // slidesMotor.setTargetPosition(slidesSetpoint);
+            // slidesMotor.setVelocity(slidesSpeed);
 
 
             // PIVOT POSITIONS -----------------
@@ -176,38 +186,57 @@ public class FieldCentricTeleop extends LinearOpMode {
             if (gamepad1.y) {
                 // pivot ground goal
                 pivotSetpoint = 0;
-                pivotSpeed = velocityDirection(pivotSetpoint, armMotor.getCurrentPosition(), 0.75);
+                target = new MotionProfile(pivotJerk, 9 * COUNTS_PER_INCH, pivotSetpoint - armMotor.getCurrentPosition());
+                runtime.reset();
             } else if (gamepad1.x) {
                 // pivot low goal
                 pivotSetpoint = -1800;
-                pivotSpeed = velocityDirection(pivotSetpoint, armMotor.getCurrentPosition(), 1.5);
+                target = new MotionProfile(pivotJerk, 9 * COUNTS_PER_INCH, pivotSetpoint - armMotor.getCurrentPosition());
+                runtime.reset();
             } else if (gamepad1.b) {
                 // pivot climb
 
 //                pivotSetpoint = 4900;
-//                pivotSpeed = velocityDirection(pivotSetpoint, armMotor.getCurrentPosition(), 2);
+//                target = new MotionProfile(pivotJerk, 4 * COUNTS_PER_INCH,pivotSetpoint);
+                runtime.reset();
                 claw.setPosition(0.4);
             } else if (gamepad1.a) {
                 // pivot ground
 //                pivotSetpoint = 0;
-//                pivotSpeed = velocityDirection(pivotSetpoint, armMotor.getCurrentPosition(), 2);
+//                target = new MotionProfile(pivotJerk, 4 * COUNTS_PER_INCH,pivotSetpoint);
+                claw.setPosition(0.7);
+                runtime.reset();
+            }
+
+            if (claw.getPosition() == 0.7 && pivotSetpoint >= -1000) {
+                pivotSetpoint = -1000;
+            }
+
+            if (target != null) {
+                double[] result = target.computeMotion(runtime.seconds());
+                pivotSpeed = result[1];
+            }
+
+            // ARM PIVOT MANUAL -----------------------------------------
+
+            if (gamepad1.start) {
+                pivotSetpoint += 30;
+                pivotSpeed = velocityDirection(pivotSetpoint, armMotor.getCurrentPosition(), -1);
+                target = null;
+            } else if (gamepad1.back) {
+                pivotSetpoint -= 30;
+                pivotSpeed = velocityDirection(pivotSetpoint, armMotor.getCurrentPosition(), -1);
+                target = null;
+            }
+
+            if ((pivotSetpoint - 4 <= armMotor.getCurrentPosition() && armMotor.getCurrentPosition() <= pivotSetpoint + 4) && target != null) {
+                pivotSpeed = velocityDirection(pivotSetpoint, armMotor.getCurrentPosition(), -2);
+                target = null;
             }
 
             // Set position and velocity
             armMotor.setTargetPosition(pivotSetpoint);
             armMotor.setVelocity(pivotSpeed);
-
-
-
-            // ARM PIVOT MANUAL - NOT USED ----------------------
-
-            if (gamepad1.start) {
-                pivotSetpoint += 30;
-                pivotSpeed = velocityDirection(pivotSetpoint, armMotor.getCurrentPosition(), -2);
-            } else if (gamepad1.back) {
-                pivotSetpoint -= 30;
-                pivotSpeed = velocityDirection(pivotSetpoint, armMotor.getCurrentPosition(), -2);
-            }
 
 
             // INTAKE BUTTONS -------------------------------
@@ -230,16 +259,18 @@ public class FieldCentricTeleop extends LinearOpMode {
 //            }
 
             if (gamepad1.dpad_left) {
-                wrist.setPosition(0.3);
+//                wrist.setPosition(0.3);
+                armMotor.setPower(1);
             }
             if (gamepad1.dpad_right) {
-                wrist.setPosition(0.2);
+                armMotor.setPower(-1);
+
             }
             if (gamepad1.dpad_down) {
-                wristPosition-=0.05;
+                wristPosition -= 0.01;
             }
             if (gamepad1.dpad_up) {
-                wristPosition+=0.05;
+                wristPosition += 0.01;
             }
 
             wrist.setPosition(wristPosition);
@@ -257,12 +288,19 @@ public class FieldCentricTeleop extends LinearOpMode {
             telemetry.addData("arm velo set", pivotSpeed);
             telemetry.addData("arm current position", armMotor.getCurrentPosition());
             telemetry.addData("arm position goal", pivotSetpoint);
-            telemetry.addData("Angle",botHeading);
-            telemetry.addData("Rotx",rotX);
-            telemetry.addData("roty",rotY);
-            telemetry.addData("x",x);
-            telemetry.addData("math.cos",Math.cos(botHeading));
+            telemetry.addData("Angle", botHeading);
+            telemetry.addData("Rotx", rotX);
+            telemetry.addData("roty", rotY);
+            telemetry.addData("x", x);
+            telemetry.addData("math.cos", Math.cos(botHeading));
             telemetry.addData("Wrist Pos", wrist.getPosition());
+            telemetry.addData("claw pos", claw.getPosition());
+            if (target != null) {
+                telemetry.addData("t1", target.timeIntervals[0]);
+                telemetry.addData("t2", target.timeIntervals[1]);
+                telemetry.addData("t3", target.timeIntervals[2]);
+                telemetry.addData("test", target.e);
+            }
             telemetry.update();
 
         }

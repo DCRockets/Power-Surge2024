@@ -129,7 +129,7 @@ public class sampleauto extends LinearOpMode {
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         // commands in main loop
         runtime.reset();
-        encoderDrive(DRIVE_SPEED,  12,  12, 5.0, imu);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  24,  24, 5.0, imu);  // S1: Forward 47 Inches with 5 Sec timeout
 //        encoderDrive(TURN_SPEED,   12, -12, 4.0, imu);  // S2: Turn Right 12 Inches with 4 Sec timeout
 //        encoderDrive(DRIVE_SPEED, -24, -24, 4.0, imu);  // S3: Reverse 24 Inches with 4 Sec timeout
 
@@ -214,7 +214,7 @@ public class sampleauto extends LinearOpMode {
             // inches is of course 12in = 1ft
             // the motor needs to go 114 counts per inch
             // thus the cruise velocity will need to be near 6in per sec
-            MotionProfile target = new MotionProfile(10, 4 * COUNTS_PER_INCH,newBackLeftTarget);
+            MotionProfile target = new MotionProfile(100, 4 * COUNTS_PER_INCH, newBackLeftTarget);
 
 
             // reset the timeout time and start motion
@@ -227,14 +227,18 @@ public class sampleauto extends LinearOpMode {
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
                     (frontLeft.isBusy() || frontRight.isBusy() || backRight.isBusy() || backLeft.isBusy())) {
-                double[] result = target.computeMotion(runtime.milliseconds());
+                double[] result = target.computeMotion(runtime.seconds());
                 // change velocity
                 frontLeft.setVelocity(Math.abs(result[1]));
                 frontRight.setVelocity(Math.abs(result[1]));
                 backLeft.setVelocity(Math.abs(result[1]));
                 backRight.setVelocity(Math.abs(result[1]));
+
+                frontLeft.setTargetPosition(newBackLeftTarget);
+                frontRight.setTargetPosition(newBackLeftTarget);
+                backLeft.setTargetPosition(newBackLeftTarget);
+                backRight.setTargetPosition(newBackLeftTarget);
 
                 // Display it for the driver.
                 telemetry.addData("Running to",  " %7d :%7d", newFrontLeftTarget,  newFrontRightTarget);
