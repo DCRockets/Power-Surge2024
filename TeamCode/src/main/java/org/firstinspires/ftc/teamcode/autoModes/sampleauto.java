@@ -149,6 +149,12 @@ public class sampleauto extends LinearOpMode {
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS, BNO055IMU imu) {
+
+        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 //        double botHeading = 0;
         leftInches = ((leftInches/3)/11)*12;
         rightInches = ((rightInches/3)/11)*12;
@@ -257,11 +263,6 @@ public class sampleauto extends LinearOpMode {
             backLeft.setPower(0);
 
             // Turn off RUN_TO_POSITION
-            frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
 
             sleep(30000);   // optional pause after each move.
         }

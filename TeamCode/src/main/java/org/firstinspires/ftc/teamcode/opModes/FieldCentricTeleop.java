@@ -50,8 +50,10 @@ public class FieldCentricTeleop extends LinearOpMode {
         CRServo intake = hardwareMap.get(CRServo.class, "Intake");
         Servo wrist = hardwareMap.get(Servo.class, "Wrist");
         Servo claw = hardwareMap.get(Servo.class, "Claw");
+        Servo elbow = hardwareMap.get(Servo.class, "Elbow");
 
         double wristPosition = wrist.getPosition();
+        double elbowPosition = elbow.getPosition();
 
         DcMotorEx armMotor = hardwareMap.get(DcMotorEx.class,"armPivot");
 //        DcMotorEx slidesMotor = hardwareMap.get(DcMotorEx.class,"slidesMotor");
@@ -260,20 +262,19 @@ public class FieldCentricTeleop extends LinearOpMode {
 
             if (gamepad1.dpad_left) {
 //                wrist.setPosition(0.3);
-                armMotor.setPower(1);
-            }
-            if (gamepad1.dpad_right) {
-                armMotor.setPower(-1);
+                elbowPosition += 0.01;
+            } else if (gamepad1.dpad_right) {
+                elbowPosition -= 0.01;
 
             }
             if (gamepad1.dpad_down) {
                 wristPosition -= 0.01;
-            }
-            if (gamepad1.dpad_up) {
+            } else if (gamepad1.dpad_up) {
                 wristPosition += 0.01;
             }
 
             wrist.setPosition(wristPosition);
+            elbow.setPosition(elbowPosition);
 
 
 
@@ -294,6 +295,9 @@ public class FieldCentricTeleop extends LinearOpMode {
             telemetry.addData("x", x);
             telemetry.addData("math.cos", Math.cos(botHeading));
             telemetry.addData("Wrist Pos", wrist.getPosition());
+            telemetry.addData("Wrist setpos", wristPosition);
+            telemetry.addData("elbow pos", elbow.getPosition());
+            telemetry.addData("elbow setpos", elbowPosition);
             telemetry.addData("claw pos", claw.getPosition());
             if (target != null) {
                 telemetry.addData("t1", target.timeIntervals[0]);
