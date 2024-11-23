@@ -57,16 +57,13 @@ public class FieldCentricTeleop extends LinearOpMode {
         DcMotorEx elbowMotor = hardwareMap.get(DcMotorEx.class,"elbowMotor");
 
         // setup movement motors
-        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        elbowMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        elbowMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         elbowMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         elbowMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         // init motors at current position
         armMotor.setTargetPosition(armMotor.getCurrentPosition());
+        elbowMotor.setTargetPosition(elbowMotor.getCurrentPosition());
 
 //        elbowMotor.setTargetPosition((elbowMotor.getCurrentPosition()));
         //Init Speed and setpoints
@@ -154,47 +151,26 @@ public class FieldCentricTeleop extends LinearOpMode {
             backRight.setPower(backRightPower);
 
 
-            // BUTTON BINDINGS -----------------------------------------
-
-            // LINEAR SLIDES ------------
-
-            //Button Bindings
-//            if (gamepad1.dpad_up) {
-            //              // slides high goal
-            //            elbowSetpoint = 0;
-            //          slidesSpeed = velocityDirection(elbowSetpoint, elbowMotor.getCurrentPosition(), 2);
-            //    } else if (gamepad1.dpad_left) {
-            //      // slides low goal
-            //    elbowSetpoint = 0;
-            //  slidesSpeed = velocityDirection(elbowSetpoint, elbowMotor.getCurrentPosition(), 2);
-//            } else if (gamepad1.dpad_right) {
-            //              // slides climbing
-            //            elbowSetpoint = 0;
-            //          slidesSpeed = velocityDirection(elbowSetpoint, elbowMotor.getCurrentPosition(), 2);
-            //    } else if (gamepad1.dpad_down) {
-            //      // slides ground
-            //    elbowSetpoint = 0;
-            //  slidesSpeed = velocityDirection(elbowSetpoint, elbowMotor.getCurrentPosition(), 2);
-            // }
-
-            // Set position and velocity
-            // elbowMotor.setTargetPosition(elbowSetpoint);
-            // elbowMotor.setVelocity(slidesSpeed);
-
-
             // PIVOT POSITIONS -----------------
 
             //Button Bindings
             if (gamepad1.y) {
-                // pivot ground goal
-                pivotSetpoint = 0;
-                target = new MotionProfile(pivotJerk, 9 * COUNTS_PER_INCH, pivotSetpoint - armMotor.getCurrentPosition());
-                runtime.reset();
+                // specimin grab
+                armMotor.setTargetPosition(-700);
+//                pivotSetpoint = -700;
+//                target = new MotionProfile(pivotJerk, 9 * COUNTS_PER_INCH, pivotSetpoint - armMotor.getCurrentPosition());
+                elbowMotor.setTargetPosition(-1070);
+//                elbowSetpoint = -1070;
+//                target = new MotionProfile(pivotJerk, 9 * COUNTS_PER_INCH, elbowSetpoint - elbowMotor.getCurrentPosition());
             } else if (gamepad1.x) {
-                // pivot low goal
-                pivotSetpoint = -1800;
-                target = new MotionProfile(pivotJerk, 9 * COUNTS_PER_INCH, pivotSetpoint - armMotor.getCurrentPosition());
-                runtime.reset();
+                //specimin score
+                armMotor.setTargetPosition(-2171);
+//                pivotSetpoint = -2171;
+//                target = new MotionProfile(pivotJerk, 9 * COUNTS_PER_INCH, pivotSetpoint - armMotor.getCurrentPosition());
+                elbowMotor.setTargetPosition(-1240);
+//                elbowSetpoint = -1240;
+//                target = new MotionProfile(pivotJerk, 9 * COUNTS_PER_INCH, elbowSetpoint - elbowMotor.getCurrentPosition());
+
             } else if (gamepad1.b) {
                 // pivot climb
 
@@ -236,6 +212,8 @@ public class FieldCentricTeleop extends LinearOpMode {
                 target = null;
             }
 
+
+
             // Set position and velocity
             armMotor.setTargetPosition(pivotSetpoint);
             armMotor.setVelocity(pivotSpeed);
@@ -261,15 +239,20 @@ public class FieldCentricTeleop extends LinearOpMode {
 //            }
 
             if (gamepad1.dpad_left) {
-//                wrist.setPosition(0.3);
-                elbowSetpoint += 15;
-                elbowSpeed = velocityDirection(pivotSetpoint, armMotor.getCurrentPosition(), -1);
-
+                elbowSetpoint -= 10;
+                elbowSpeed = velocityDirection(elbowSetpoint, elbowMotor.getCurrentPosition(), -1);
+                target = null;
             } else if (gamepad1.dpad_right) {
-                elbowSetpoint -= 15;
-                elbowSpeed = velocityDirection(elbowSetpoint, armMotor.getCurrentPosition(), -1);
+                elbowSetpoint += 10;
+                elbowSpeed = velocityDirection(elbowSetpoint, elbowMotor.getCurrentPosition(), -1);
+                target = null;
             }
 
+            if ((elbowSetpoint - 4 <= elbowMotor.getCurrentPosition() && elbowMotor.getCurrentPosition() <= elbowSetpoint + 4) && target != null) {
+                elbowSpeed = velocityDirection(elbowSetpoint, elbowMotor.getCurrentPosition(), -2);
+                target = null;
+            }
+            elbowMotor.setTargetPosition(elbowSetpoint);
             elbowMotor.setVelocity(elbowSpeed);
 
 
