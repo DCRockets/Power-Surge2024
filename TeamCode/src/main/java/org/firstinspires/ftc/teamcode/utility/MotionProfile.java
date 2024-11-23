@@ -41,7 +41,7 @@ public class MotionProfile {
         double t2 = timeIntervals[1];
         double t3 = timeIntervals[2];
 
-        double[] results = new double[3]; // Array to store [position, velocity, acceleration]
+        double[] results = new double[4]; // Array to store [position, velocity, acceleration, if done (not done = 0 , done = 1]
 
         if (time <= t1) {
             // Acceleration Phase (0 <= t <= t1)
@@ -51,6 +51,7 @@ public class MotionProfile {
             results[0] = 0;//position;  // Position
             results[1] = velocity;  // Velocity
             results[2] = 0; //acceleration; // Acceleration
+            results[3] = 0;
         } else if (time <= t2) {
             // Cruise Phase (t1 < t <= t2)
 //            double positionAtT1 = (jerk * Math.pow(t1, 3)) / 6;
@@ -59,6 +60,7 @@ public class MotionProfile {
             results[0] = 0;//position; // Position
             results[1] = cruiseVelocity; // Velocity
             results[2] = 0; // Acceleration is 0 during cruise
+            results[3] = 0;
         } else if (time <= t3) {
             // Deceleration Phase (t2 < t <= t3)
 //            double positionAtT2 = (jerk * Math.pow(t1, 3)) / 6 + cruiseVelocity * (t2 - t1);
@@ -70,11 +72,13 @@ public class MotionProfile {
             results[0] = 0;//position;  // Position
             results[1] = velocity;  // Velocity
             results[2] = 0;//acceleration; // Acceleration
+            results[3] = 0;
         } else {
             // After the deceleration phase ends (position has reached final value)
             results[0] = finalPosition;  // Final position
             results[1] = 0;   // Final velocity
             results[2] = 0;   // Final acceleration
+            results[3] = 1;   // Done
         }
 
         return results; // returns [position, velocity, acceleration]

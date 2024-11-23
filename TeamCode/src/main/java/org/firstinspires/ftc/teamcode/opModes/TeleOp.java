@@ -23,7 +23,7 @@ import org.firstinspires.ftc.teamcode.utility.MotionProfile;
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp")
 public class TeleOp extends LinearOpMode {
     private PIDController controller;
-    public static double p = 0.01, i = 0.05, d = 0;
+    public static double p = 0.0075, i = 0.05, d = 0;
     public static double f = 0;
     private DcMotor armMotor;
     private PIDController controller2;
@@ -107,12 +107,42 @@ public class TeleOp extends LinearOpMode {
             telemetry.update();
 
             if (gamepad1.y) {
-                target = -900;
+                target = -1065;
                 target2 = -1200;
             }
             if (gamepad1.x) {
-                target = -2000;
-                target2 = -1460;
+                target = -2140;
+                target2 = -1215;
+            }
+            if (gamepad1.dpad_left) {
+                target = 0;
+                target2 = 0;
+            }
+            if (gamepad1.dpad_right) {
+                target -= 50;
+            }
+
+            if (gamepad1.start) {
+                target += 15;
+            } else if (gamepad1.back) {
+                target -= 15;
+            }
+
+            if (gamepad1.right_trigger >= 0.95) {
+                target2 += 10;
+            } else if (gamepad1.left_trigger >= 0.95) {
+                target2 -= 10;
+            }
+
+
+            // arm limits
+            if ((target < -6000)||(target > 0))  {
+                if (target < -6000) {
+                    target = -3300;
+                } else if (target > 0) {
+                    target = 0;
+                }
+
             }
             // get joystick values
             double x = gamepad1.left_stick_x;
@@ -174,7 +204,8 @@ public class TeleOp extends LinearOpMode {
                 runtime.reset();
             }
             if (claw.getPosition() == 0.7) {
-                target = -1500;
+                sleep(100);
+                target = -1650;
             }
             if (gamepad1.left_bumper) {
                 intake.setPower(0.5);
