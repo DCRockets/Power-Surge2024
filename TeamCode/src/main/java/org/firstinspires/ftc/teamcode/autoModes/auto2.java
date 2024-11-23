@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="NEW TIME AUTO", group="Robot")
@@ -21,6 +22,8 @@ public class auto2 extends LinearOpMode {
     private DcMotorEx armMotor = null;
     private DcMotorEx elbowMotor = null;
 
+    private Servo claw = null;
+
     private ElapsedTime runtime = new ElapsedTime();
 
     private final double ticks_in_degree = 1120 / 270;
@@ -28,7 +31,7 @@ public class auto2 extends LinearOpMode {
     public static double p = 0.01, i = 0.05, d = 0;
     public static double f = 0;
     private PIDController controller2;
-    public static double p2 = .00075, i2 = 0.075, d2 = 0;
+    public static double p2 = .0075, i2 = 0.075, d2 = 0;
     public static double f2 = 0;
 
 
@@ -45,6 +48,7 @@ public class auto2 extends LinearOpMode {
         DcMotor frontRight = hardwareMap.dcMotor.get("frontRight");
         DcMotor backLeft = hardwareMap.dcMotor.get("backLeft");
         DcMotor backRight = hardwareMap.dcMotor.get("backRight");
+        Servo claw = hardwareMap.get(Servo.class, "Claw");
 
         DcMotorEx armMotor = hardwareMap.get(DcMotorEx.class, "armPivot");
         DcMotorEx elbowMotor = hardwareMap.get(DcMotorEx.class, "elbowMotor");
@@ -72,7 +76,8 @@ public class auto2 extends LinearOpMode {
         backLeft.setPower(-FORWARD_SPEED);
         backRight.setPower(FORWARD_SPEED);
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 3)) {
+        claw.setPosition(0.7);
+        while (opModeIsActive() && (runtime.seconds() < 0.5)) {
             telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
         }
@@ -135,7 +140,7 @@ public class auto2 extends LinearOpMode {
             armMotor.setPower(power);
         }
         sleep(1000);
-
+        runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 1)) {
             double target2 = -600;
             controller2.setPID(p2, i2, d2);
@@ -145,6 +150,20 @@ public class auto2 extends LinearOpMode {
             double power2 = pid2 + ff2;
             elbowMotor.setPower(power2);
         }
+        sleep(1000);
+        frontLeft.setPower(FORWARD_SPEED);
+        frontRight.setPower(-FORWARD_SPEED);
+        backLeft.setPower(-FORWARD_SPEED);
+        backRight.setPower(FORWARD_SPEED);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 1)) {
+            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
 
 
 
