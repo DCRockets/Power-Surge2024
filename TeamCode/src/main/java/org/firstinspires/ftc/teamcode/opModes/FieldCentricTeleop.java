@@ -50,33 +50,33 @@ public class FieldCentricTeleop extends LinearOpMode {
         CRServo intake = hardwareMap.get(CRServo.class, "Intake");
         Servo wrist = hardwareMap.get(Servo.class, "Wrist");
         Servo claw = hardwareMap.get(Servo.class, "Claw");
-        Servo elbow = hardwareMap.get(Servo.class, "Elbow");
 
         double wristPosition = wrist.getPosition();
-        double elbowPosition = elbow.getPosition();
 
         DcMotorEx armMotor = hardwareMap.get(DcMotorEx.class,"armPivot");
-//        DcMotorEx slidesMotor = hardwareMap.get(DcMotorEx.class,"slidesMotor");
+        DcMotorEx elbowMotor = hardwareMap.get(DcMotorEx.class,"elbowMotor");
 
         // setup movement motors
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        slidesMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        slidesMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        slidesMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        slidesMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        elbowMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        elbowMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        elbowMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        elbowMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         // init motors at current position
         armMotor.setTargetPosition(armMotor.getCurrentPosition());
-//        slidesMotor.setTargetPosition((slidesMotor.getCurrentPosition()));
+
+//        elbowMotor.setTargetPosition((elbowMotor.getCurrentPosition()));
         //Init Speed and setpoints
         double pivotSpeed = 0;
-//        double slidesSpeed = 0;
+        double elbowSpeed = 0;
         int pivotSetpoint = armMotor.getCurrentPosition();
-//        int slidesSetpoint = slidesMotor.getCurrentPosition();
+        int elbowSetpoint = elbowMotor.getCurrentPosition();
 
         MotionProfile target = new MotionProfile(10, 4 * COUNTS_PER_INCH,pivotSetpoint);
+        MotionProfile target2 = new MotionProfile(10, 4*COUNTS_PER_INCH,elbowSetpoint);
 
 
         // testing PIDF
@@ -161,25 +161,25 @@ public class FieldCentricTeleop extends LinearOpMode {
             //Button Bindings
 //            if (gamepad1.dpad_up) {
             //              // slides high goal
-            //            slidesSetpoint = 0;
-            //          slidesSpeed = velocityDirection(slidesSetpoint, slidesMotor.getCurrentPosition(), 2);
+            //            elbowSetpoint = 0;
+            //          slidesSpeed = velocityDirection(elbowSetpoint, elbowMotor.getCurrentPosition(), 2);
             //    } else if (gamepad1.dpad_left) {
             //      // slides low goal
-            //    slidesSetpoint = 0;
-            //  slidesSpeed = velocityDirection(slidesSetpoint, slidesMotor.getCurrentPosition(), 2);
+            //    elbowSetpoint = 0;
+            //  slidesSpeed = velocityDirection(elbowSetpoint, elbowMotor.getCurrentPosition(), 2);
 //            } else if (gamepad1.dpad_right) {
             //              // slides climbing
-            //            slidesSetpoint = 0;
-            //          slidesSpeed = velocityDirection(slidesSetpoint, slidesMotor.getCurrentPosition(), 2);
+            //            elbowSetpoint = 0;
+            //          slidesSpeed = velocityDirection(elbowSetpoint, elbowMotor.getCurrentPosition(), 2);
             //    } else if (gamepad1.dpad_down) {
             //      // slides ground
-            //    slidesSetpoint = 0;
-            //  slidesSpeed = velocityDirection(slidesSetpoint, slidesMotor.getCurrentPosition(), 2);
+            //    elbowSetpoint = 0;
+            //  slidesSpeed = velocityDirection(elbowSetpoint, elbowMotor.getCurrentPosition(), 2);
             // }
 
             // Set position and velocity
-            // slidesMotor.setTargetPosition(slidesSetpoint);
-            // slidesMotor.setVelocity(slidesSpeed);
+            // elbowMotor.setTargetPosition(elbowSetpoint);
+            // elbowMotor.setVelocity(slidesSpeed);
 
 
             // PIVOT POSITIONS -----------------
@@ -262,19 +262,33 @@ public class FieldCentricTeleop extends LinearOpMode {
 
             if (gamepad1.dpad_left) {
 //                wrist.setPosition(0.3);
-                elbowPosition += 0.01;
-            } else if (gamepad1.dpad_right) {
-                elbowPosition -= 0.01;
+                elbowSetpoint += 15;
+                elbowSpeed = velocityDirection(pivotSetpoint, armMotor.getCurrentPosition(), -1);
 
+            } else if (gamepad1.dpad_right) {
+                elbowSetpoint -= 15;
+                elbowSpeed = velocityDirection(elbowSetpoint, armMotor.getCurrentPosition(), -1);
             }
+
+            elbowMotor.setVelocity(elbowSpeed);
+
+
             if (gamepad1.dpad_down) {
                 wristPosition -= 0.01;
             } else if (gamepad1.dpad_up) {
                 wristPosition += 0.01;
             }
 
+            if ((wristPosition < 0)||(wristPosition > 1))  {
+                if (wristPosition < 0) {
+                    wristPosition = 0;
+                } else if (wristPosition > 1) {
+                    wristPosition = 1;
+                }
+
+            }
             wrist.setPosition(wristPosition);
-            elbow.setPosition(elbowPosition);
+
 
 
 
@@ -296,8 +310,8 @@ public class FieldCentricTeleop extends LinearOpMode {
             telemetry.addData("math.cos", Math.cos(botHeading));
             telemetry.addData("Wrist Pos", wrist.getPosition());
             telemetry.addData("Wrist setpos", wristPosition);
-            telemetry.addData("elbow pos", elbow.getPosition());
-            telemetry.addData("elbow setpos", elbowPosition);
+            telemetry.addData("elbow pos", elbowMotor.getCurrentPosition());
+            telemetry.addData("elbow setpos", elbowSetpoint);
             telemetry.addData("claw pos", claw.getPosition());
             if (target != null) {
                 telemetry.addData("t1", target.timeIntervals[0]);
