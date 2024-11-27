@@ -70,7 +70,7 @@ import org.firstinspires.ftc.teamcode.utility.MotionProfile;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Robot: Auto Drive By Encoder", group="Robot")
+@Autonomous(name="PID AUToO", group="Robot")
 public class sampleauto extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -96,7 +96,7 @@ public class sampleauto extends LinearOpMode {
     // For example, use a value of 2.0 for a 12-tooth spur gear driving a 24-tooth spur gear.
     // This is gearing DOWN for less speed and more torque.
     // For gearing UP, use a gear ratio less than 1.0. Note this will affect the direction of wheel rotation.
-    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
+    static final double     COUNTS_PER_MOTOR_REV    = 480 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
@@ -171,14 +171,14 @@ public class sampleauto extends LinearOpMode {
         runtime.reset();
 //        encoderDrive(DRIVE_SPEED,  24,  24, 5.0, imu);  // S1: Forward 47 Inches with 5 Sec timeout
 
-        drive(12,12);
-        armPositionSet(-1500,0);
+        drive(12,12, 0.1);
+
+        armPositionSet(-700,-700);
+        drive(-12,12,0.15);
 //        encoderDrive(TURN_SPEED,   12, -12, 4.0, imu);  // S2: Turn Right 12 Inches with 4 Sec timeout
 //        encoderDrive(DRIVE_SPEED, -24, -24, 4.0, imu);  // S3: Reverse 24 Inches with 4 Sec timeout
 
-        telemetry.addData("Path", "Complete");
 
-        telemetry.update();
         sleep(10000);  // pause to display final telemetry message.
     }
 
@@ -324,7 +324,13 @@ public class sampleauto extends LinearOpMode {
 
     }
     public void armPositionSet(int armTarget, int elbowTarget) {
-        while (opModeIsActive()) {
+        runtime.reset();
+        int rangeVariable = 8;
+        while (opModeIsActive() && (runtime.seconds() < 3) && !(
+                ((armMotor.getCurrentPosition() >= armTarget-rangeVariable) && (rangeVariable+armTarget >= armMotor.getCurrentPosition())) &&
+                ((elbowMotor.getCurrentPosition() >= elbowTarget-rangeVariable) && (rangeVariable+elbowTarget >= elbowMotor.getCurrentPosition()))
+        )
+        ) {
             controller.setPID(p, i, d);
             int armPos = armMotor.getCurrentPosition();
             double pid = controller.calculate(armPos, armTarget);
@@ -338,9 +344,14 @@ public class sampleauto extends LinearOpMode {
             double ff2 = Math.cos(Math.toRadians(elbowTarget / ticks_in_degree)) * f2;
             double power2 = pid2 + ff2;
             elbowMotor.setPower(power2);
+
+            telemetry.addData("armpower", armMotor.getPower());
+            telemetry.addData("elbow", elbowMotor.getPower());
+            telemetry.update();
+
         }
     }
-    public void drive(double leftin, double rightin) {
+    public void drive(double leftin, double rightin, double speedMultiplyer) {
         frontLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         frontRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         backLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -356,30 +367,34 @@ public class sampleauto extends LinearOpMode {
         double newBackLeftTarget = backLeft.getCurrentPosition() + (leftin * COUNTS_PER_INCH);
         double newBackRightTarget = frontRight.getCurrentPosition() + (rightin * COUNTS_PER_INCH);
 
-        while (opModeIsActive()) {
+        int rangeVariable = 8;
 
-
-
+        while (opModeIsActive() && !(
+                ((frontRight.getCurrentPosition() >= newFrontRightTarget-rangeVariable) && (rangeVariable+newFrontRightTarget >= frontRight.getCurrentPosition())) &&
+                ((frontLeft.getCurrentPosition() >= newFrontLeftTarget-rangeVariable) && (rangeVariable+newFrontLeftTarget >= frontLeft.getCurrentPosition())) &&
+                ((backLeft.getCurrentPosition() >= newBackLeftTarget-rangeVariable) && (rangeVariable+newBackLeftTarget >= backLeft.getCurrentPosition())) &&
+                ((backRight.getCurrentPosition() >= newBackRightTarget-rangeVariable) && (rangeVariable+newBackRightTarget >= backRight.getCurrentPosition()))
+                ) ) {
 
             double pid = controller.calculate(frontRight.getCurrentPosition(), newFrontRightTarget);
             double ff = Math.cos(Math.toRadians(newFrontRightTarget / ticks_in_degree)) * f;
             double power = pid + ff;
-            frontRight.setPower(power);
+            frontRight.setPower(power*speedMultiplyer);
 
             double pid1 = controller.calculate(frontLeft.getCurrentPosition(), newFrontLeftTarget);
             double ff1 = Math.cos(Math.toRadians(newFrontLeftTarget / ticks_in_degree)) * f;
             double power1 = pid1 + ff1;
-            frontLeft.setPower(power1);
+            frontLeft.setPower(power1*speedMultiplyer);
 
             double pid2 = controller.calculate(backRight.getCurrentPosition(), newBackRightTarget);
             double ff2 = Math.cos(Math.toRadians(newBackRightTarget / ticks_in_degree)) * f;
             double power2 = pid2 + ff2;
-            backRight.setPower(power2);
+            backRight.setPower(power2*speedMultiplyer);
 
             double pid3 = controller.calculate(backLeft.getCurrentPosition(), newBackLeftTarget);
             double ff3 = Math.cos(Math.toRadians(newBackLeftTarget / ticks_in_degree)) * f;
             double power3 = pid3 + ff3;
-            backLeft.setPower(power3);
+            backLeft.setPower(power3*speedMultiplyer);
 
             telemetry.addData("front left pos", newFrontLeftTarget);
             telemetry.addData("front right pos", newFrontRightTarget);
@@ -391,7 +406,14 @@ public class sampleauto extends LinearOpMode {
             telemetry.addData("current back left pos", backLeft.getCurrentPosition());
 //            telemetry.addData("current back right pos", backRight.getCurrentPosition());
 
+            telemetry.addData("armpower", armMotor.getPower());
+            telemetry.addData("elbow", elbowMotor.getPower());
+
             telemetry.update();
         }
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
     }
 }

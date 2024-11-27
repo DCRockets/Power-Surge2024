@@ -137,9 +137,9 @@ public class TeleOp extends LinearOpMode {
 
 
             // arm limits
-            if ((target < -6000)||(target > 0))  {
-                if (target < -6000) {
-                    target = -6000;
+            if ((target < -7000)||(target > 0))  {
+                if (target < -7000) {
+                    target = -7000;
                 } else if (target > 0) {
                     target = 0;
                 }
