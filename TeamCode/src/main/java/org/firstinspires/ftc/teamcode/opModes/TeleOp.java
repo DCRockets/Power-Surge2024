@@ -107,7 +107,7 @@ public class TeleOp extends LinearOpMode {
             telemetry.update();
 
             if (gamepad1.y) {
-                target = -1065;
+                target = -1200;
                 target2 = -1200;
             }
             if (gamepad1.x) {
@@ -119,7 +119,8 @@ public class TeleOp extends LinearOpMode {
                 target2 = 0;
             }
             if (gamepad1.dpad_right) {
-                target -= 50;
+                armMotor.setPower(-1);
+                target = armMotor.getCurrentPosition();
             }
 
             if (gamepad1.start) {
@@ -138,7 +139,7 @@ public class TeleOp extends LinearOpMode {
             // arm limits
             if ((target < -6000)||(target > 0))  {
                 if (target < -6000) {
-                    target = -3300;
+                    target = -6000;
                 } else if (target > 0) {
                     target = 0;
                 }
