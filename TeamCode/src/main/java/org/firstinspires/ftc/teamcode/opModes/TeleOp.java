@@ -199,9 +199,9 @@ public class TeleOp extends LinearOpMode {
             backRight.setPower(backRightPower);
             if (gamepad1.b) {
                 runtime.reset();
-                claw.setPosition(0.4);
+                claw.setPosition(0.6);
             } else if (gamepad1.a) {
-                claw.setPosition(0.7);
+                claw.setPosition(0.9);
                 runtime.reset();
             }
             if (claw.getPosition() == 0.7) {

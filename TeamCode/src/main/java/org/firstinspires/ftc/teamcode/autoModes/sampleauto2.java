@@ -70,8 +70,8 @@ import org.firstinspires.ftc.teamcode.utility.MotionProfile;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="PID AUToO spesciman", group="Robot")
-public class sampleauto extends LinearOpMode {
+@Autonomous(name="PID AUToO sample", group="Robot")
+public class sampleauto2 extends LinearOpMode {
 
     /* Declare OpMode members. */
     public DcMotorEx frontLeft = null;
@@ -184,34 +184,14 @@ public class sampleauto extends LinearOpMode {
 //        encoderDrive(DRIVE_SPEED,  24,  24, 5.0, imu);  // S1: Forward 47 Inches with 5 Sec timeout
 
         clawset(true);
-        drive(48,48, 0.1);
-        // arm to score pos
-        armPositionSet(-1050,-700);
-        //score
-        drive(18,18,0.15);
+
+        drive(18,18,0.1);
+        drive(-36,36, 0.1);
+        drive(18,18,0.1);
+        armPositionSet(-2000,-1200);
         clawset(false);
-        armPositionSet(-850,-700);
-
-        //move back
-        drive(-36,-36,0.1);
-//        armPositionSet(0,0);
-        //move towards blocks
-        strafe(-60,0.1);
-        drive(40,40, 0.15); //changed with updated angles
-        strafe(-18, 0.15);
-        // push first block
-        drive(-48,-48,0.15);
-        drive(48,48,0.15);
-        strafe(-9,0.1);
-        // second block
-        drive(-48,-48,0.15);
-        drive(48,48,0.15);
-        strafe(-12,0.1);
-        // third block
-        drive(-48,-48,0.15);
-
-//        encoderDrive(TURN_SPEED,   12, -12, 4.0, imu);  // S2: Turn Right 12 Inches with 4 Sec timeout
-//        encoderDrive(DRIVE_SPEED, -24, -24, 4.0, imu);  // S3: Reverse 24 Inches with 4 Sec timeout
+        drive(-12,-12,0.15);
+        armPositionSet(0,0);
 
 
         sleep(10000);  // pause to display final telemetry message.
@@ -365,7 +345,7 @@ public class sampleauto extends LinearOpMode {
         int rangeVariable = 15;
         while (opModeIsActive() && (runtime.seconds() < 1.5) && !(
                 ((armMotor.getCurrentPosition() >= armTarget-rangeVariable) && (rangeVariable+armTarget >= armMotor.getCurrentPosition())) &&
-                ((elbowMotor.getCurrentPosition() >= elbowTarget-rangeVariable) && (rangeVariable+elbowTarget >= elbowMotor.getCurrentPosition()))
+                        ((elbowMotor.getCurrentPosition() >= elbowTarget-rangeVariable) && (rangeVariable+elbowTarget >= elbowMotor.getCurrentPosition()))
         )
         ) {
             controller.setPID(p, i, d);
@@ -387,7 +367,6 @@ public class sampleauto extends LinearOpMode {
             telemetry.update();
 
         }
-
     }
     public void drive(double leftin, double rightin, double speedMultiplyer) {
         frontLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -410,10 +389,10 @@ public class sampleauto extends LinearOpMode {
 
         while (opModeIsActive() && (runtime.seconds() < Math.sqrt(Math.abs(leftin))/2.75 ) && !(
                 ((frontRight.getCurrentPosition() >= newFrontRightTarget-rangeVariable) && (rangeVariable+newFrontRightTarget >= frontRight.getCurrentPosition())) &&
-                ((frontLeft.getCurrentPosition() >= newFrontLeftTarget-rangeVariable) && (rangeVariable+newFrontLeftTarget >= frontLeft.getCurrentPosition())) &&
-                ((backLeft.getCurrentPosition() >= newBackLeftTarget-rangeVariable) && (rangeVariable+newBackLeftTarget >= backLeft.getCurrentPosition())) &&
-                ((backRight.getCurrentPosition() >= newBackRightTarget-rangeVariable) && (rangeVariable+newBackRightTarget >= backRight.getCurrentPosition()))
-                ) ) {
+                        ((frontLeft.getCurrentPosition() >= newFrontLeftTarget-rangeVariable) && (rangeVariable+newFrontLeftTarget >= frontLeft.getCurrentPosition())) &&
+                        ((backLeft.getCurrentPosition() >= newBackLeftTarget-rangeVariable) && (rangeVariable+newBackLeftTarget >= backLeft.getCurrentPosition())) &&
+                        ((backRight.getCurrentPosition() >= newBackRightTarget-rangeVariable) && (rangeVariable+newBackRightTarget >= backRight.getCurrentPosition()))
+        ) ) {
 
             double pid = controller3.calculate(frontRight.getCurrentPosition(), newFrontRightTarget);
             double ff = Math.cos(Math.toRadians(newFrontRightTarget / ticks_in_degree)) * f3;
@@ -549,6 +528,7 @@ public class sampleauto extends LinearOpMode {
 
             telemetry.update();
         }
+        sleep(250);
         frontLeft.setPower(0);
         frontRight.setPower(0);
         backLeft.setPower(0);
@@ -557,7 +537,7 @@ public class sampleauto extends LinearOpMode {
     public void clawset(boolean clawbol) {
         // true is close, false is open
         runtime.reset();
-        while (opModeIsActive() && runtime.seconds() < 0.2) {
+        while (opModeIsActive() && runtime.seconds() < 0.4) {
             controller.setPID(p, i, d);
             int armPos = armMotor.getCurrentPosition();
             double pid4 = controller.calculate(armPos, armTarget);

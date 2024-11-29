@@ -21,7 +21,7 @@ public class MotionProfile {
 
         // Time spent cruising (t2 - t1) can be derived by considering the final position
         double positionAtT1 = (jerk * Math.pow(t1, 3)) / 6;
-        double cruiseTime = (Math.abs(Math.abs(finalPosition) - positionAtT1)) / cruiseVelocity;
+        double cruiseTime = (finalPosition - positionAtT1) / cruiseVelocity;
 
         double t2 = t1 + cruiseTime;
         e =cruiseTime;
