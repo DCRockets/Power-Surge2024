@@ -70,7 +70,7 @@ import org.firstinspires.ftc.teamcode.utility.MotionProfile;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="PID AUToO sample", group="Robot")
+@Autonomous(name="Sample", group="Robot")
 public class sampleauto2 extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -140,10 +140,10 @@ public class sampleauto2 extends LinearOpMode {
 
         // Initialize the drive system variables.
 
-        frontLeft = hardwareMap.get(DcMotorEx.class,"frontLeft");
-        frontRight = hardwareMap.get(DcMotorEx.class,"frontRight");
-        backLeft   = hardwareMap.get(DcMotorEx.class,"backLeft");
-        backRight  = hardwareMap.get(DcMotorEx.class,"backRight");
+        frontLeft = hardwareMap.get(DcMotorEx.class,"leftFront");
+        frontRight = hardwareMap.get(DcMotorEx.class,"rightFront");
+        backLeft   = hardwareMap.get(DcMotorEx.class,"leftRear");
+        backRight  = hardwareMap.get(DcMotorEx.class,"rightRear");
 
 
         intake = hardwareMap.get(CRServo.class, "Intake");

@@ -70,7 +70,7 @@ import org.firstinspires.ftc.teamcode.utility.MotionProfile;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="PID AUToO spesciman", group="Robot")
+@Autonomous(name="Specimin", group="Robot")
 public class sampleauto extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -140,10 +140,10 @@ public class sampleauto extends LinearOpMode {
 
         // Initialize the drive system variables.
 
-        frontLeft = hardwareMap.get(DcMotorEx.class,"frontLeft");
-        frontRight = hardwareMap.get(DcMotorEx.class,"frontRight");
-        backLeft   = hardwareMap.get(DcMotorEx.class,"backLeft");
-        backRight  = hardwareMap.get(DcMotorEx.class,"backRight");
+        frontLeft = hardwareMap.get(DcMotorEx.class,"leftFront");
+        frontRight = hardwareMap.get(DcMotorEx.class,"rightFront");
+        backLeft   = hardwareMap.get(DcMotorEx.class,"leftRear");
+        backRight  = hardwareMap.get(DcMotorEx.class,"rightRear");
 
 
         intake = hardwareMap.get(CRServo.class, "Intake");
@@ -163,14 +163,6 @@ public class sampleauto extends LinearOpMode {
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-//        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        // Send telemetry message to indicate successful Encoder reset
-//        telemetry.addData();
-//        telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -194,15 +186,15 @@ public class sampleauto extends LinearOpMode {
 
         //move back
         drive(-36,-36,0.1);
-//        armPositionSet(0,0);
+        armPositionSet(0,0);
         //move towards blocks
         strafe(-60,0.1);
-        drive(40,40, 0.15); //changed with updated angles
+        drive(32,32, 0.15); //changed with updated angles
         strafe(-18, 0.15);
         // push first block
-        drive(-48,-48,0.15);
+        drive(-44,-44,0.15);
         drive(48,48,0.15);
-        strafe(-9,0.1);
+        strafe(-10,0.1);
         // second block
         drive(-48,-48,0.15);
         drive(48,48,0.15);

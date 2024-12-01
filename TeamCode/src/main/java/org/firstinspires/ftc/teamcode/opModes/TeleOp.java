@@ -53,10 +53,10 @@ public class TeleOp extends LinearOpMode {
 
         // Declare our motors
         // Make sure your ID's match your configuration
-        DcMotor frontLeft = hardwareMap.dcMotor.get("frontLeft");
-        DcMotor backLeft = hardwareMap.dcMotor.get("frontRight");
-        DcMotor frontRight = hardwareMap.dcMotor.get("backLeft");
-        DcMotor backRight = hardwareMap.dcMotor.get("backRight");
+        DcMotor frontLeft = hardwareMap.dcMotor.get("leftFront");
+        DcMotor backLeft = hardwareMap.dcMotor.get("rightFront");
+        DcMotor frontRight = hardwareMap.dcMotor.get("leftRear");
+        DcMotor backRight = hardwareMap.dcMotor.get("rightRear");
 
         // Reverse the right side motors
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -104,6 +104,10 @@ public class TeleOp extends LinearOpMode {
             telemetry.addData("target", target);
             telemetry.addData("pos2", elbowPos);
             telemetry.addData("target2", target2);
+            telemetry.addData("FL" , frontLeft.getCurrentPosition());
+            telemetry.addData("FR" , frontRight.getCurrentPosition());
+            telemetry.addData("BL" , backLeft.getCurrentPosition());
+            telemetry.addData("BR" , backRight.getCurrentPosition());
             telemetry.update();
 
             if (gamepad1.y) {
