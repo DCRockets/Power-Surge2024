@@ -111,7 +111,7 @@ public class sampleauto extends LinearOpMode {
     private final double ticks_in_degree = 1120 / 270;
     private PIDController controller;
     public static double p = 0.01, i = 0.05, d = 0;
-    public static double f = 0;
+    public static double f = 0.6;
 
     private PIDController controller2;
     public static double p2 = .0075, i2 = 0.075, d2 = 0;
@@ -176,31 +176,34 @@ public class sampleauto extends LinearOpMode {
 //        encoderDrive(DRIVE_SPEED,  24,  24, 5.0, imu);  // S1: Forward 47 Inches with 5 Sec timeout
 
         clawset(true);
-        drive(48,48, 0.1);
-        // arm to score pos
+//        drive(48,48, 0.1);
+//        // arm to score pos
         armPositionSet(-1050,-700);
         //score
-        drive(18,18,0.15);
+        drive(68,68,0.15); //was 20 and 20
         clawset(false);
         armPositionSet(-850,-700);
 
         //move back
-        drive(-36,-36,0.1);
+        drive(-38,-38,0.1);
         armPositionSet(0,0);
         //move towards blocks
-        strafe(-60,0.1);
-        drive(32,32, 0.15); //changed with updated angles
-        strafe(-18, 0.15);
+        strafe(-56,0.05);
+        drive(28,28, 0.15); //changed with updated angles
+        strafe(-15, 0.1);
         // push first block
-        drive(-44,-44,0.15);
-        drive(48,48,0.15);
-        strafe(-10,0.1);
+        drive(-44,-44,0.1);
+        drive(38,38,0.1);
+        drive(3,-3,0.1);
+        strafe(-8,0.1);
         // second block
-        drive(-48,-48,0.15);
-        drive(48,48,0.15);
-        strafe(-12,0.1);
+        drive(-44,-44,0.1);
+        drive(44,44,0.1);
+        drive(3,-3,0.1);
+        strafe(-16,0.1);
+
         // third block
-        drive(-48,-48,0.15);
+        drive(-50,-50,0.15);
 
 //        encoderDrive(TURN_SPEED,   12, -12, 4.0, imu);  // S2: Turn Right 12 Inches with 4 Sec timeout
 //        encoderDrive(DRIVE_SPEED, -24, -24, 4.0, imu);  // S3: Reverse 24 Inches with 4 Sec timeout
