@@ -176,31 +176,29 @@ public class sampleauto extends LinearOpMode {
 //        encoderDrive(DRIVE_SPEED,  24,  24, 5.0, imu);  // S1: Forward 47 Inches with 5 Sec timeout
 
         clawset(true);
-//        drive(48,48, 0.1);
-//        // arm to score pos
-        armPositionSet(-1050,-700);
+        armPositionSet(-1250,700);
         //score
-        drive(68,68,0.15); //was 20 and 20
+        drive(36,36,0.15); //was 20 and 20
         clawset(false);
-        armPositionSet(-850,-700);
+        armPositionSet(-850,700);
 
         //move back
-        drive(-38,-38,0.1);
+        drive(-28,-28,0.1);
         armPositionSet(0,0);
         //move towards blocks
         strafe(-56,0.05);
-        drive(28,28, 0.15); //changed with updated angles
+        drive(45,45, 0.15); //changed with updated angles
         strafe(-15, 0.1);
         // push first block
         drive(-44,-44,0.1);
         drive(38,38,0.1);
         drive(3,-3,0.1);
-        strafe(-8,0.1);
+        strafe(-12,0.1);
         // second block
         drive(-44,-44,0.1);
         drive(44,44,0.1);
         drive(3,-3,0.1);
-        strafe(-16,0.1);
+        strafe(-14,0.1);
 
         // third block
         drive(-50,-50,0.15);
