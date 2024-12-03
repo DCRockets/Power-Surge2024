@@ -182,16 +182,29 @@ public class sampleauto2 extends LinearOpMode {
         // commands in main loop
         runtime.reset();
 //        encoderDrive(DRIVE_SPEED,  24,  24, 5.0, imu);  // S1: Forward 47 Inches with 5 Sec timeout
-
+//           relies on hitting the wall at the beginning
         clawset(true);
-
-        drive(18,18,0.1);
-        drive(-36,36, 0.1);
-        drive(18,18,0.1);
-        armPositionSet(-2000,-1200);
+        armPositionSet(-2800,1200); //removed cause mount snapped... AGAIN
+        drive(24,24,0.03);
         clawset(false);
-        drive(-12,-12,0.15);
+        drive(-24,-24,0.03);
         armPositionSet(0,0);
+        strafe(-15,0.15);
+        drive(22,-22,0.1);
+        drive(-15,-15,0.15);
+        drive(60,60,.1);
+        drive(-3,3,0.05); //spin for correction
+        strafe(18,.05);
+        drive(-48,-48,0.1);
+        drive(52,52,.1);
+        drive(-3,3,0.05); //spin for correction
+        strafe(18,.05);
+        drive(-48,-48,0.1);
+        drive(52,52,.1);
+        drive(-3,3,0.05); //spin for correction
+        strafe(18,.05);
+        drive(-54,-54,0.1);
+
 
 
         sleep(10000);  // pause to display final telemetry message.
@@ -342,7 +355,7 @@ public class sampleauto2 extends LinearOpMode {
         armTarget = armTarget1;
         elbowTarget = elbowTarget1;
         runtime.reset();
-        int rangeVariable = 15;
+        int rangeVariable = 10;
         while (opModeIsActive() && (runtime.seconds() < 1.5) && !(
                 ((armMotor.getCurrentPosition() >= armTarget-rangeVariable) && (rangeVariable+armTarget >= armMotor.getCurrentPosition())) &&
                         ((elbowMotor.getCurrentPosition() >= elbowTarget-rangeVariable) && (rangeVariable+elbowTarget >= elbowMotor.getCurrentPosition()))
@@ -384,10 +397,10 @@ public class sampleauto2 extends LinearOpMode {
         double newBackLeftTarget = backLeft.getCurrentPosition() + (leftin * COUNTS_PER_INCH);
         double newBackRightTarget = frontRight.getCurrentPosition() + (rightin * COUNTS_PER_INCH);
 
-        int rangeVariable = 15;
+        int rangeVariable = 10;
         runtime.reset();
 
-        while (opModeIsActive() && (runtime.seconds() < Math.sqrt(Math.abs(leftin))/2.75 ) && !(
+        while (opModeIsActive() && (runtime.seconds() < Math.sqrt(Math.abs(leftin))/3.25 ) && !( //changed
                 ((frontRight.getCurrentPosition() >= newFrontRightTarget-rangeVariable) && (rangeVariable+newFrontRightTarget >= frontRight.getCurrentPosition())) &&
                         ((frontLeft.getCurrentPosition() >= newFrontLeftTarget-rangeVariable) && (rangeVariable+newFrontLeftTarget >= frontLeft.getCurrentPosition())) &&
                         ((backLeft.getCurrentPosition() >= newBackLeftTarget-rangeVariable) && (rangeVariable+newBackLeftTarget >= backLeft.getCurrentPosition())) &&

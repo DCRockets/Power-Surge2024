@@ -112,11 +112,11 @@ public class TeleOp extends LinearOpMode {
 
             if (gamepad1.y) {
                 target = -1200;
-                target2 = -1200;
+                target2 = 1200;
             }
             if (gamepad1.x) {
                 target = -2140;
-                target2 = -1215;
+                target2 = 1215;
             }
             if (gamepad1.dpad_left) {
                 target = 0;
@@ -128,22 +128,22 @@ public class TeleOp extends LinearOpMode {
             }
 
             if (gamepad1.start) {
-                target += 15;
+                target += 25;
             } else if (gamepad1.back) {
-                target -= 15;
+                target -= 25;
             }
 
             if (gamepad1.right_trigger >= 0.95) {
-                target2 += 10;
-            } else if (gamepad1.left_trigger >= 0.95) {
                 target2 -= 10;
+            } else if (gamepad1.left_trigger >= 0.95) {
+                target2 += 10;
             }
 
 
             // arm limits
-            if ((target < -7000)||(target > 0))  {
-                if (target < -7000) {
-                    target = -7000;
+            if ((target < -7500)||(target > 0))  {
+                if (target < -7500) {
+                    target = -7500;
                 } else if (target > 0) {
                     target = 0;
                 }
@@ -208,7 +208,7 @@ public class TeleOp extends LinearOpMode {
                 claw.setPosition(0.9);
                 runtime.reset();
             }
-            if (claw.getPosition() == 0.7) {
+            if (claw.getPosition() == 0.9) {
                 sleep(100);
                 target = -1650;
             }

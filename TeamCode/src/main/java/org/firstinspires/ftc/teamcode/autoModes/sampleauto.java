@@ -114,7 +114,7 @@ public class sampleauto extends LinearOpMode {
     public static double f = 0.6;
 
     private PIDController controller2;
-    public static double p2 = .0075, i2 = 0.075, d2 = 0;
+    public static double p2 = .015, i2 = 0.075, d2 = 0;
     public static double f2 = 0;
 
     private PIDController controller3;
@@ -176,9 +176,9 @@ public class sampleauto extends LinearOpMode {
 //        encoderDrive(DRIVE_SPEED,  24,  24, 5.0, imu);  // S1: Forward 47 Inches with 5 Sec timeout
 
         clawset(true);
-        armPositionSet(-1250,700);
+        armPositionSet(-1300,700);
         //score
-        drive(36,36,0.15); //was 20 and 20
+        drive(33,33,0.15); //was 20 and 20
         clawset(false);
         armPositionSet(-850,700);
 
@@ -187,18 +187,18 @@ public class sampleauto extends LinearOpMode {
         armPositionSet(0,0);
         //move towards blocks
         strafe(-56,0.05);
-        drive(45,45, 0.15); //changed with updated angles
-        strafe(-15, 0.1);
+        drive(48,48, 0.15); //changed with updated angles
+        strafe(-18, 0.1);
         // push first block
         drive(-44,-44,0.1);
-        drive(38,38,0.1);
+        drive(46,46,0.1);
         drive(3,-3,0.1);
-        strafe(-12,0.1);
+        strafe(-10,0.1);
         // second block
         drive(-44,-44,0.1);
-        drive(44,44,0.1);
+        drive(46,46,0.1);
         drive(3,-3,0.1);
-        strafe(-14,0.1);
+        strafe(-12,0.1);
 
         // third block
         drive(-50,-50,0.15);
@@ -401,7 +401,7 @@ public class sampleauto extends LinearOpMode {
         int rangeVariable = 15;
         runtime.reset();
 
-        while (opModeIsActive() && (runtime.seconds() < Math.sqrt(Math.abs(leftin))/2.75 ) && !(
+        while (opModeIsActive() && (runtime.seconds() < Math.sqrt(Math.abs(leftin))/2.75 ) && !( //changed from 2.75
                 ((frontRight.getCurrentPosition() >= newFrontRightTarget-rangeVariable) && (rangeVariable+newFrontRightTarget >= frontRight.getCurrentPosition())) &&
                 ((frontLeft.getCurrentPosition() >= newFrontLeftTarget-rangeVariable) && (rangeVariable+newFrontLeftTarget >= frontLeft.getCurrentPosition())) &&
                 ((backLeft.getCurrentPosition() >= newBackLeftTarget-rangeVariable) && (rangeVariable+newBackLeftTarget >= backLeft.getCurrentPosition())) &&
@@ -486,7 +486,7 @@ public class sampleauto extends LinearOpMode {
         int rangeVariable = 15;
         runtime.reset();
 
-        while (opModeIsActive() && (runtime.seconds() < Math.sqrt(Math.abs(distance))/2.5 ) && !(
+        while (opModeIsActive() && (runtime.seconds() < Math.sqrt(Math.abs(distance))/3.5 ) && !( //tested to decrease time
                 ((frontRight.getCurrentPosition() >= newFrontRightTarget - rangeVariable) && (rangeVariable + newFrontRightTarget >= frontRight.getCurrentPosition())) &&
                         ((frontLeft.getCurrentPosition() >= newFrontLeftTarget - rangeVariable) && (rangeVariable + newFrontLeftTarget >= frontLeft.getCurrentPosition())) &&
                         ((backLeft.getCurrentPosition() >= newBackLeftTarget - rangeVariable) && (rangeVariable + newBackLeftTarget >= backLeft.getCurrentPosition())) &&
@@ -590,7 +590,7 @@ public class sampleauto extends LinearOpMode {
 
 //        double target = new MotionProfile();
 
-        double rangeVariable = 10;
+        double rangeVariable = 10; //changed to help?
 
         while (opModeIsActive() && (runtime.seconds() < Math.abs(leftin)/10 ) && !(
                 ((frontRight.getCurrentPosition() >= newFrontRightTarget-rangeVariable) && (rangeVariable+newFrontRightTarget >= frontRight.getCurrentPosition())) &&
