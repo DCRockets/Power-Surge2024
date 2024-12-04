@@ -176,32 +176,32 @@ public class sampleauto extends LinearOpMode {
 //        encoderDrive(DRIVE_SPEED,  24,  24, 5.0, imu);  // S1: Forward 47 Inches with 5 Sec timeout
 
         clawset(true);
-        armPositionSet(-1300,700);
+        armPositionSet(-1250,700);
         //score
-        drive(33,33,0.15); //was 20 and 20
+        drive(31,31,0.15); //was 20 and 20
         clawset(false);
         armPositionSet(-850,700);
 
         //move back
-        drive(-28,-28,0.1);
+        drive(-22,-22,0.1);
         armPositionSet(0,0);
         //move towards blocks
-        strafe(-56,0.05);
-        drive(48,48, 0.15); //changed with updated angles
+        strafe(-44,0.05);
+        drive(52,52, 0.1); //changed with updated angles
         strafe(-18, 0.1);
         // push first block
-        drive(-44,-44,0.1);
-        drive(46,46,0.1);
-        drive(3,-3,0.1);
-        strafe(-10,0.1);
+        drive(-46,-46,0.1);
+        drive(50,50,0.1);
+        drive(2,-2,0.1);
+        strafe(-12,0.1);
         // second block
-        drive(-44,-44,0.1);
-        drive(46,46,0.1);
+        drive(-50,-50,0.1);
+        drive(50,50,0.1);
         drive(3,-3,0.1);
         strafe(-12,0.1);
 
         // third block
-        drive(-50,-50,0.15);
+        drive(-52,-52,0.15);
 
 //        encoderDrive(TURN_SPEED,   12, -12, 4.0, imu);  // S2: Turn Right 12 Inches with 4 Sec timeout
 //        encoderDrive(DRIVE_SPEED, -24, -24, 4.0, imu);  // S3: Reverse 24 Inches with 4 Sec timeout
