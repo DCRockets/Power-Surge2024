@@ -29,14 +29,11 @@
 
 package org.firstinspires.ftc.teamcode.autoModes;
 
-import android.text.SpannableString;
-
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -71,7 +68,7 @@ import org.firstinspires.ftc.teamcode.utility.MotionProfile;
  */
 
 @Autonomous(name="Specimin", group="Robot")
-public class sampleauto extends LinearOpMode {
+public class Specimin extends LinearOpMode {
 
     /* Declare OpMode members. */
     public DcMotorEx frontLeft = null;

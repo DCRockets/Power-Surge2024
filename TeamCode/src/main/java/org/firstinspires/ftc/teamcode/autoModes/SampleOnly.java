@@ -29,14 +29,11 @@
 
 package org.firstinspires.ftc.teamcode.autoModes;
 
-import android.text.SpannableString;
-
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -70,8 +67,8 @@ import org.firstinspires.ftc.teamcode.utility.MotionProfile;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Sample", group="Robot")
-public class sampleauto2 extends LinearOpMode {
+@Autonomous(name="SampleOnly", group="Robot")
+public class SampleOnly extends LinearOpMode {
 
     /* Declare OpMode members. */
     public DcMotorEx frontLeft = null;
