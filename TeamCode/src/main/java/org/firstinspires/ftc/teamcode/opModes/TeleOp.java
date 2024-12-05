@@ -20,10 +20,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.*;
 import org.firstinspires.ftc.teamcode.utility.MotionProfile;
 @Config
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "\uD83C\uDF36 TeleOp \uD83C\uDF36")
 public class TeleOp extends LinearOpMode {
     private PIDController controller;
-    public static double p = 0.0075, i = 0.05, d = 0;
+    public static double p = 0.01, i = 0.05, d = 0;
     public static double f = 0;
     private DcMotor armMotor;
     private PIDController controller2;
@@ -111,8 +111,8 @@ public class TeleOp extends LinearOpMode {
             telemetry.update();
 
             if (gamepad1.y) {
-                target = -1200;
-                target2 = 1200;
+                target = -1625;
+                target2 = 1230;
             }
             if (gamepad1.x) {
                 target = -2140;
@@ -210,7 +210,7 @@ public class TeleOp extends LinearOpMode {
             }
             if (claw.getPosition() == 0.9) {
                 sleep(100);
-                target = -1650;
+                target = -2100;
             }
             if (gamepad1.left_bumper) {
                 intake.setPower(0.5);

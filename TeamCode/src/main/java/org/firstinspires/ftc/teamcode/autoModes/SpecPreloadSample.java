@@ -144,7 +144,7 @@ public class SpecPreloadSample extends LinearOpMode {
 //        encoderDrive(DRIVE_SPEED,  24,  24, 5.0, imu);  // S1: Forward 47 Inches with 5 Sec timeout
 
         clawset(true);
-        armPositionSet(-1250,700);
+        armPositionSet(-1300,700);
         //score
         drive(31,31,0.15); //was 20 and 20
         clawset(false);
@@ -156,16 +156,16 @@ public class SpecPreloadSample extends LinearOpMode {
         //move towards blocks
         strafe(44,0.05);
         drive(52,52, 0.1); //changed with updated angles
-        strafe(18, 0.1);
+        strafe(16, 0.1);
         // push first block
         drive(-46,-46,0.1);
         drive(50,50,0.1);
-        drive(2,-2,0.1);
+        drive(-2,2,0.1);
         strafe(12,0.1);
         // second block
         drive(-50,-50,0.1);
         drive(50,50,0.1);
-        drive(3,-3,0.1);
+        drive(-3,3,0.1);
         strafe(12,0.1);
 
         // third block

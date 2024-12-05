@@ -67,7 +67,7 @@ import org.firstinspires.ftc.teamcode.utility.MotionProfile;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Specimin", group="Robot")
+@Autonomous(name="Specimin \uD83C\uDF36 \uD83C\uDF36 \uD83C\uDF36", group="Robot")
 public class Specimin extends LinearOpMode {
 
     /* Declare OpMode members. */

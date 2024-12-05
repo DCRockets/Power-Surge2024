@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opModes;
 
 
 import com.arcrobotics.ftclib.controller.PIDFController;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -18,6 +19,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.*;
 import org.firstinspires.ftc.teamcode.utility.MotionProfile;
 
 @TeleOp(name = "FieldCentric")
+@Disabled
 public class FieldCentricTeleop extends LinearOpMode {
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
