@@ -115,8 +115,8 @@ public class TeleOp extends LinearOpMode {
                 target2 = 1230;
             }
             if (gamepad1.x) {
-                target = -2140;
-                target2 = 1215;
+                target = -1800;
+                target2 = 1170;
             }
             if (gamepad1.dpad_left) {
                 target = 0;
@@ -210,7 +210,7 @@ public class TeleOp extends LinearOpMode {
             }
             if (claw.getPosition() == 0.9) {
                 sleep(100);
-                target = -2100;
+                target = -2375;
             }
             if (gamepad1.left_bumper) {
                 intake.setPower(0.5);
