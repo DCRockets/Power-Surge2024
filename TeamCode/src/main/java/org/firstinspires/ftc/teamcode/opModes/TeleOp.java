@@ -20,14 +20,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.*;
 import org.firstinspires.ftc.teamcode.utility.MotionProfile;
 @Config
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "\uD83C\uDF36 TeleOp \uD83C\uDF36")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "\uD83C\uDF36 TeleOp \uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36\uD83C\uDF36")
 public class TeleOp extends LinearOpMode {
     private PIDController controller;
     public static double p = 0.01, i = 0.05, d = 0;
     public static double f = 0;
     private DcMotor armMotor;
     private PIDController controller2;
-    public static double p2 = .00075, i2 = 0.075, d2 = 0;
+    public static double p2 = .005, i2 = 0.075, d2 = 0;
     public static double f2 = 0;
     private DcMotor elbowMotor;
 
@@ -108,11 +108,15 @@ public class TeleOp extends LinearOpMode {
             telemetry.addData("FR" , frontRight.getCurrentPosition());
             telemetry.addData("BL" , backLeft.getCurrentPosition());
             telemetry.addData("BR" , backRight.getCurrentPosition());
+            telemetry.addData("bumass" , claw.getPosition());
             telemetry.update();
 
+            if (gamepad2.a) {
+                imu.initialize(parameters);
+            }
             if (gamepad1.y) {
-                target = -1625;
-                target2 = 1230;
+                target = -1500;
+                target2 = 1340;
             }
             if (gamepad1.x) {
                 target = -1800;
@@ -141,12 +145,21 @@ public class TeleOp extends LinearOpMode {
 
 
             // arm limits
-            if ((target < -7500)||(target > 0))  {
+            if ((target < -7500)||(target > 0)) {
                 if (target < -7500) {
                     target = -7500;
                 } else if (target > 0) {
                     target = 0;
                 }
+            }
+
+                // arm limits
+                if ((target2 < 0)||(target2 > 1450))  {
+                    if (target2 > 1450) {
+                        target2 = 1450;
+                    } else if (target2 < 0) {
+                        target2 = 0;
+                    }
 
             }
             // get joystick values
@@ -202,15 +215,14 @@ public class TeleOp extends LinearOpMode {
             frontRight.setPower(frontRightPower);
             backRight.setPower(backRightPower);
             if (gamepad1.b) {
-                runtime.reset();
-                claw.setPosition(0.6);
+                claw.setPosition(0);
             } else if (gamepad1.a) {
-                claw.setPosition(0.9);
-                runtime.reset();
+                claw.setPosition(0.35);
             }
-            if (claw.getPosition() == 0.9) {
-                sleep(100);
-                target = -2375;
+            if (claw.getPosition() == 0.35) {
+                sleep(200);
+                target = -1250;
+                target2 = 700;
             }
             if (gamepad1.left_bumper) {
                 intake.setPower(0.5);
